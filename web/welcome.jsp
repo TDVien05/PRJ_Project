@@ -3,138 +3,516 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Welcome - Bepbui</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chào mừng - Bepbui</title>
         <style>
             * {
-                overflow-x: hidden;
-
-            }
-            body {
-                font-family: Arial, sans-serif;
                 margin: 0;
                 padding: 0;
-                background-color: #f5e8c7;
+                box-sizing: border-box;
             }
+            
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #f5e8c7 0%, #e8d5b7 100%);
+                line-height: 1.6;
+            }
+
             /* Header Part 1 */
             .header-part1 {
-                background-color: #ffffff;
+                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 10px 20px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                padding: 15px 30px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
             }
 
-
-            .logo img{
-                height: 100px;
+            .logo {
+                transition: transform 0.3s ease;
             }
+            
+            .logo:hover {
+                transform: scale(1.05);
+            }
+            
+            .logo img {
+                height: 80px;
+                width: auto;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                /* Improved image display */
+                object-fit: contain;
+                max-width: 100%;
+            }
+
             .contact-info {
                 display: flex;
                 align-items: center;
+                gap: 20px;
             }
+            
             .contact-info span {
-                margin: 0 15px;
                 color: #8b0000;
-                font-weight: bold;
+                font-weight: 600;
+                font-size: 14px;
+                padding: 8px 12px;
+                background: rgba(139, 0, 0, 0.1);
+                border-radius: 20px;
+                transition: all 0.3s ease;
             }
-            .contact-info .phone:before {
-                content: url('/images/phone-icon-red.png');
-                margin-right: 5px;
+            
+            .contact-info span:hover {
+                background: rgba(139, 0, 0, 0.2);
+                transform: translateY(-2px);
             }
-            .contact-info .email:before {
-                content: url('/images/envelope-icon-red.png');
-                margin-right: 5px;
-            }
+
             .search-cart-user {
                 display: flex;
                 align-items: center;
+                gap: 15px;
             }
-            .search-cart-user input {
-                padding: 5px;
-                margin-right: 10px;
-                border: 1px solid #d2b48c;
-                border-radius: 5px;
+            
+            .search-container {
+                position: relative;
             }
-            .search-cart-user img {
+            
+            .search-container input {
+                padding: 12px 40px 12px 15px;
+                border: 2px solid #d2b48c;
+                border-radius: 25px;
+                width: 250px;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                background: white;
+            }
+            
+            .search-container input:focus {
+                outline: none;
+                border-color: #8b0000;
+                box-shadow: 0 0 10px rgba(139, 0, 0, 0.2);
+                width: 300px;
+            }
+            
+            .search-btn {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: #8b0000;
+                border: none;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                color: white;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .search-btn:hover {
+                background: #660000;
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            .icon-btn {
+                position: relative;
+                padding: 10px;
+                border-radius: 50%;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                border: none;
+                cursor: pointer;
+            }
+            
+            .icon-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+            
+            .icon-btn img {
+                height: 24px;
+                width: 24px;
+                /* Improved icon display */
+                object-fit: contain;
+            }
+
+            .cart-badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: #ff4757;
+                color: white;
+                border-radius: 50%;
+                width: 20px;
                 height: 20px;
-                margin-left: 10px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
             }
+
             /* Header Part 2 */
             .header-part2 {
-                background-color: #ffffff;
-                padding: 10px 20px;
+                background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+                padding: 20px;
                 display: flex;
-                justify-content: space-around;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                justify-content: center;
+                gap: 80px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             }
-            .header-part2 .category {
+            
+            .category {
                 text-align: center;
+                transition: all 0.3s ease;
+                padding: 15px;
+                border-radius: 15px;
+                cursor: pointer;
             }
-            .header-part2 .category img {
-                height: 50px;
-                margin-bottom: 5px;
+            
+            .category:hover {
+                background: linear-gradient(135deg, #8b0000 0%, #a00000 100%);
+                color: white;
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(139, 0, 0, 0.3);
             }
-            /* Body */
+            
+            .category img {
+                height: 60px;
+                width: 60px;
+                margin-bottom: 10px;
+                transition: all 0.3s ease;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+                /* Improved category icon display */
+                object-fit: contain;
+                border-radius: 8px;
+            }
+            
+            .category:hover img {
+                filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(255, 255, 255, 0.3));
+                transform: scale(1.1);
+            }
+            
+            .category p {
+                font-weight: 600;
+                font-size: 16px;
+                margin: 0;
+            }
+
+            /* Banner */
             .banner {
-                width: 100%;
-                height: auto;
+                position: relative;
+                margin: 20px 0;
+                border-radius: 15px;
+                overflow: hidden;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             }
 
             .banner img {
                 width: 100%;
-                heigh: 100%;
+                height: 400px;
+                /* Fixed banner image display */
+                object-fit: cover;
+                object-position: center;
+                transition: transform 0.5s ease;
             }
-            .products {
+            
+            .banner:hover img {
+                transform: scale(1.05);
+            }
+            
+            .banner-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(45deg, rgba(139, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 100%);
                 display: flex;
-                justify-content: space-around;
-                padding: 20px;
-                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
             }
-            .product-item {
-                background-color: #ffffff;
-                width: 200px;
-                padding: 10px;
-                margin: 10px;
+            
+            .banner:hover .banner-overlay {
+                opacity: 1;
+            }
+            
+            .banner-text {
+                color: white;
                 text-align: center;
-                border: 1px solid #d2b48c;
-                border-radius: 5px;
+                font-size: 28px;
+                font-weight: bold;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             }
+
+            /* Products */
+            .products-section {
+                padding: 40px 20px;
+            }
+            
+            .section-title {
+                text-align: center;
+                font-size: 32px;
+                font-weight: bold;
+                color: #8b0000;
+                margin-bottom: 40px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            }
+            
+            .products {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 30px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .product-item {
+                background: white;
+                border-radius: 20px;
+                padding: 20px;
+                text-align: center;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .product-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                transition: left 0.5s ease;
+            }
+            
+            .product-item:hover::before {
+                left: 100%;
+            }
+            
+            .product-item:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 40px rgba(139, 0, 0, 0.2);
+                border-color: #8b0000;
+            }
+            
             .product-item img {
                 width: 100%;
-                height: auto;
+                height: 200px;
+                /* Improved product image display */
+                object-fit: cover;
+                object-position: center;
+                border-radius: 15px;
+                margin-bottom: 15px;
+                transition: transform 0.3s ease;
+                /* Ensure images maintain aspect ratio */
+                background-color: #f8f9fa;
             }
+            
+            .product-item:hover img {
+                transform: scale(1.05);
+            }
+            
+            .product-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 8px;
+            }
+            
+            .product-price {
+                font-size: 20px;
+                font-weight: bold;
+                color: #8b0000;
+                margin-bottom: 15px;
+            }
+            
+            .add-to-cart {
+                background: linear-gradient(135deg, #8b0000 0%, #a00000 100%);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+            
+            .add-to-cart:hover {
+                background: linear-gradient(135deg, #660000 0%, #800000 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+            }
+
             /* Footer */
             .footer {
-                background-color: #ffffff;
-                padding: 20px;
-                text-align: center;
-                margin-top: 20px;
-                border-top: 1px dashed #ccc;
+                background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+                color: white;
+                padding: 40px 20px 20px;
+                margin-top: 50px;
             }
-            .footer-section {
-                display: inline-block;
-                margin: 0 20px;
-                vertical-align: top;
+            
+            .footer-content {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 30px;
+                max-width: 1200px;
+                margin: 0 auto;
             }
+            
+            .footer-section h3 {
+                margin-bottom: 20px;
+                font-size: 18px;
+                border-bottom: 2px solid #3498db;
+                padding-bottom: 10px;
+            }
+            
             .footer-section ul {
                 list-style: none;
-                padding: 0;
             }
+            
             .footer-section ul li {
-                margin: 5px 0;
-                color: #4682b4;
+                margin: 10px 0;
+                transition: all 0.3s ease;
+                padding: 5px 0;
             }
+            
+            .footer-section ul li:hover {
+                color: #3498db;
+                cursor: pointer;
+                padding-left: 10px;
+            }
+            
             .footer-section ul li a {
-                color: #4682b4;
+                color: white;
                 text-decoration: none;
+                transition: color 0.3s ease;
             }
+            
+            .footer-section ul li a:hover {
+                color: #3498db;
+            }
+            
             .footer-bottom {
-                margin-top: 20px;
-                color: #4682b4;
+                text-align: center;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #34495e;
+                color: #bdc3c7;
             }
 
+            /* Image loading fallback */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
 
+            /* Placeholder for missing images */
+            .image-placeholder {
+                background-color: #f0f0f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #666;
+                font-size: 14px;
+                border: 2px dashed #ccc;
+                border-radius: 8px;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .header-part1 {
+                    flex-direction: column;
+                    gap: 15px;
+                    padding: 15px;
+                }
+                
+                .contact-info {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+                
+                .header-part2 {
+                    flex-direction: column;
+                    gap: 20px;
+                }
+                
+                .search-container input {
+                    width: 200px;
+                }
+                
+                .search-container input:focus {
+                    width: 220px;
+                }
+                
+                .products {
+                    grid-template-columns: 1fr;
+                }
+
+                .banner img {
+                    height: 250px;
+                }
+            }
+
+            /* Animations */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .product-item {
+                animation: fadeInUp 0.6s ease forwards;
+            }
+            
+            .product-item:nth-child(2) { animation-delay: 0.1s; }
+            .product-item:nth-child(3) { animation-delay: 0.2s; }
+            .product-item:nth-child(4) { animation-delay: 0.3s; }
+
+            /* Scroll to top button */
+            .scroll-top {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: linear-gradient(135deg, #8b0000 0%, #a00000 100%);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+                transition: all 0.3s ease;
+                opacity: 0;
+                visibility: hidden;
+            }
+            
+            .scroll-top.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .scroll-top:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+            }
         </style>
     </head>
     <body>
@@ -142,104 +520,228 @@
         <div class="header-part1">
             <div class="logo">
                 <a href="welcome.jsp">
-                    <img src="images/bepbui-logo-removebg-preview.png" alt=""/>
+                    <img src="images/bepbui-logo-removebg-preview.png" alt="Logo Bepbui" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"/>
+                    <div class="image-placeholder" style="display:none; height:80px; width:120px;">Logo Bepbui</div>
                 </a>
+            </div>
 
+            <div class="contact-info">
+                <span class="phone">📞 0705.777.760</span>
+                <span class="email">✉️ bama.bags@gmail.com</span>
             </div>
 
             <div class="search-cart-user">
-                <input type="text" placeholder="Nhập sản phẩm...">
-                <a href="cart.jsp">
-                    <img src="images/trolley.png" alt="Cart">
-                </a>
-                <a href="userDetails.jsp">
-                    <img src="images/user.png" alt="User">
-                </a>
+                <div class="search-container">
+                    <input type="text" placeholder="Tìm kiếm sản phẩm..." id="searchInput">
+                    <button class="search-btn" onclick="searchProducts()">🔍</button>
+                </div>
+                <button class="icon-btn" onclick="toggleCart()">
+                    <img src="images/trolley.png" alt="Giỏ hàng" onerror="this.innerHTML='🛒'">
+                    <span class="cart-badge" id="cartCount">0</span>
+                </button>
+                <button class="icon-btn" onclick="toggleUser()">
+                    <img src="images/user.png" alt="Người dùng" onerror="this.innerHTML='👤'">
+                </button>
             </div>
         </div>
 
         <!-- Header Part 2 -->
         <div class="header-part2">
-            <div class="category">
-                <a href="">
-                    <div>
-                        <img src="images/backpack-icon.png" alt="Backpacks">
-                        <p>Backpacks</p>
-                    </div>
-                </a>
+            <div class="category" onclick="filterProducts('backpack')">
+                <img src="images/backpack-icon.png" alt="Balo" onerror="this.innerHTML='🎒'">
+                <p>Balo</p>
             </div>
-            <div class="category">
-                <a href="">
-                    <div>
-                        <img src="images/tote-bag.png" alt="Totes">
-                        <p>Totes</p>
-                    </div>
-                </a>
+            <div class="category" onclick="filterProducts('tote')">
+                <img src="images/tote-bag.png" alt="Túi Tote" onerror="this.innerHTML='👜'">
+                <p>Túi Tote</p>
             </div>
-            <div class="category">
-                <a href="">
-                    <div>
-                        <img src="images/wallet.png" alt="Wallets">
-                        <p>Wallets</p>
-                    </div>
-                </a>
+            <div class="category" onclick="filterProducts('wallet')">
+                <img src="images/wallet.png" alt="Ví" onerror="this.innerHTML='💳'">
+                <p>Ví</p>
             </div>
         </div>
 
-        <!-- Body -->
+        <!-- Banner -->
         <div class="banner">
-            <img src="images/banner.png" alt="Banner">
+            <img src="images/banner.png" alt="Banner quảng cáo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+            <div class="image-placeholder" style="display:none; height:400px;">Banner Quảng Cáo</div>
+            <div class="banner-overlay">
+                <div class="banner-text">Khám phá bộ sưu tập mới của chúng tôi!</div>
+            </div>
         </div>
-        <div class="products">
-            <div class="product-item">
-                <a href="">
-                    <div>
-                        <img src="images/products/214a4844_1_43588626f54c47c7bbcd361ae41ad024_master.jpg" alt="Product 1">
-                        <p>Backpack A</p>
-                        <p>$50</p>
-                    </div>
-                </a>
-            </div>
-            <div class="product-item">
-                <img src="images/product2.jpg" alt="Product 2">
-                <p>Tote B</p>
-                <p>$30</p>
-            </div>
-            <div class="product-item">
-                <img src="images/product3.jpg" alt="Product 3">
-                <p>Wallet C</p>
-                <p>$20</p>
+
+        <!-- Products Section -->
+        <div class="products-section">
+            <h2 class="section-title">Sản Phẩm Phổ Biến</h2>
+            <div class="products" id="productsContainer">
+                <div class="product-item" data-category="backpack">
+                    <img src="images/products/balo.jpg" alt="Balo A" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="image-placeholder" style="display:none; height:200px;">Hình ảnh Balo</div>
+                    <div class="product-title">Balo Cao Cấp A</div>
+                    <div class="product-price">1.250.000 VNĐ</div>
+                    <button class="add-to-cart" onclick="addToCart('Balo A', 1250000)">Thêm vào giỏ hàng</button>
+                </div>
+                <div class="product-item" data-category="tote">
+                    <img src="images/products/tote.avif" alt="Túi Tote B" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="image-placeholder" style="display:none; height:200px;">Hình ảnh Túi Tote</div>
+                    <div class="product-title">Túi Tote Thanh Lịch B</div>
+                    <div class="product-price">750.000 VNĐ</div>
+                    <button class="add-to-cart" onclick="addToCart('Túi Tote B', 750000)">Thêm vào giỏ hàng</button>
+                </div>
+                <div class="product-item" data-category="wallet">
+                    <img src="images/products/0.avif" alt="Ví C" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="image-placeholder" style="display:none; height:200px;">Hình ảnh Ví</div>
+                    <div class="product-title">Ví Da Sang Trọng C</div>
+                    <div class="product-price">500.000 VNĐ</div>
+                    <button class="add-to-cart" onclick="addToCart('Ví C', 500000)">Thêm vào giỏ hàng</button>
+                </div>
             </div>
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            <div class="footer-section">
-                <h3>ABOUT US</h3>
-            </div>
-            <div class="footer-section">
-                <h3>PHÁP LÝ & CÂU HỎI</h3>
-                <ul>
-                    <li>− Chính sách đổi trả</li>
-                    <li>− Chính sách vận chuyển</li>
-                    <li>− Chính sách thanh toán</li>
-                    <li>− Điều khoản dịch vụ</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>THÔNG TIN LIÊN HỆ</h3>
-                <ul>
-                    <li>− Điện thoại 0705.777.760</li>
-                    <li>− Fax 0705.777.760</li>
-                    <li>− Hộp thư bama.bags@gmail.com</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>FANPAGE</h3>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>GIỚI THIỆU VỀ CHÚNG TÔI</h3>
+                    <p>Bepbui là điểm đến cho các sản phẩm túi xách chất lượng cao. Chúng tôi cung cấp bộ sưu tập độc đáo gồm balo, túi tote và ví da.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>CHÍNH SÁCH & HỖ TRỢ</h3>
+                    <ul>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Chính sách vận chuyển</a></li>
+                        <li><a href="#">Chính sách thanh toán</a></li>
+                        <li><a href="#">Điều khoản dịch vụ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>THÔNG TIN LIÊN HỆ</h3>
+                    <ul>
+                        <li>📞 Điện thoại: 0705.777.760</li>
+                        <li>📠 Fax: 0705.777.760</li>
+                        <li>✉️ Email: bama.bags@gmail.com</li>
+                        <li>📍 Địa chỉ: Thành phố Hồ Chí Minh</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>THEO DÕI CHÚNG TÔI</h3>
+                    <ul>
+                        <li><a href="#">📘 Facebook</a></li>
+                        <li><a href="#">📷 Instagram</a></li>
+                        <li><a href="#">🐦 Twitter</a></li>
+                        <li><a href="#">💼 LinkedIn</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="footer-bottom">
-                Copyright © 2025 BAMA.
+                Bản quyền © 2025 BAMA. Tất cả quyền được bảo lưu.
             </div>
         </div>
+
+        <!-- Scroll to top button -->
+        <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">↑</button>
+
+        <script>
+            let cart = [];
+            let cartCount = 0;
+
+            // Add to cart functionality
+            function addToCart(productName, price) {
+                cart.push({name: productName, price: price});
+                cartCount++;
+                document.getElementById('cartCount').textContent = cartCount;
+                
+                // Simple notification in Vietnamese
+                alert(`${productName} đã được thêm vào giỏ hàng!`);
+            }
+
+            // Toggle cart visibility
+            function toggleCart() {
+                if (cart.length === 0) {
+                    alert('Giỏ hàng của bạn đang trống!');
+                } else {
+                    let cartContent = 'Nội dung giỏ hàng:\n';
+                    let total = 0;
+                    cart.forEach(item => {
+                        cartContent += `- ${item.name}: ${item.price.toLocaleString('vi-VN')} VNĐ\n`;
+                        total += item.price;
+                    });
+                    cartContent += `\nTổng cộng: ${total.toLocaleString('vi-VN')} VNĐ`;
+                    alert(cartContent);
+                }
+            }
+
+            // Toggle user menu
+            function toggleUser() {
+                alert('Tính năng người dùng sẽ sớm ra mắt!');
+            }
+
+            // Search products
+            function searchProducts() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const products = document.querySelectorAll('.product-item');
+                
+                products.forEach(product => {
+                    const productName = product.querySelector('.product-title').textContent.toLowerCase();
+                    if (productName.includes(searchTerm) || searchTerm === '') {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+            }
+
+            // Filter products by category
+            function filterProducts(category) {
+                const products = document.querySelectorAll('.product-item');
+                
+                products.forEach(product => {
+                    if (product.dataset.category === category) {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+            }
+
+            // Scroll to top functionality
+            window.addEventListener('scroll', () => {
+                const scrollTopBtn = document.getElementById('scrollTopBtn');
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            });
+
+            function scrollToTop() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+
+            // Search on Enter key
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchProducts();
+                }
+            });
+
+            // Reset filter to show all products
+            function showAllProducts() {
+                const products = document.querySelectorAll('.product-item');
+                products.forEach(product => {
+                    product.style.display = 'block';
+                });
+            }
+
+            // Add click event to logo to show all products
+            document.querySelector('.logo a').addEventListener('click', function(e) {
+                e.preventDefault();
+                showAllProducts();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+        </script>
     </body>
 </html>
