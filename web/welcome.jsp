@@ -44,7 +44,6 @@
                 width: auto;
                 border-radius: 10px;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                /* Improved image display */
                 object-fit: contain;
                 max-width: 100%;
             }
@@ -136,7 +135,6 @@
             .icon-btn img {
                 height: 24px;
                 width: 24px;
-                /* Improved icon display */
                 object-fit: contain;
             }
 
@@ -187,7 +185,6 @@
                 margin-bottom: 10px;
                 transition: all 0.3s ease;
                 filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-                /* Improved category icon display */
                 object-fit: contain;
                 border-radius: 8px;
             }
@@ -215,7 +212,6 @@
             .banner img {
                 width: 100%;
                 height: 400px;
-                /* Fixed banner image display */
                 object-fit: cover;
                 object-position: center;
                 transition: transform 0.5s ease;
@@ -309,13 +305,11 @@
             .product-item img {
                 width: 100%;
                 height: 200px;
-                /* Improved product image display */
                 object-fit: cover;
                 object-position: center;
                 border-radius: 15px;
                 margin-bottom: 15px;
                 transition: transform 0.3s ease;
-                /* Ensure images maintain aspect ratio */
                 background-color: #f8f9fa;
             }
             
@@ -430,6 +424,92 @@
                 border-radius: 8px;
             }
 
+            /* Login Modal Styles */
+            .login-modal {
+                display: none;
+                position: fixed;
+                z-index: 10000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(5px);
+            }
+
+            .login-modal-content {
+                background-color: white;
+                margin: 10% auto;
+                padding: 30px;
+                border-radius: 15px;
+                width: 90%;
+                max-width: 400px;
+                text-align: center;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+                animation: slideIn 0.3s ease;
+            }
+
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .login-modal h3 {
+                color: #8b0000;
+                margin-bottom: 20px;
+                font-size: 24px;
+            }
+
+            .login-modal p {
+                color: #666;
+                margin-bottom: 25px;
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+            .login-modal-buttons {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+            }
+
+            .login-btn, .cancel-btn {
+                padding: 12px 25px;
+                border: none;
+                border-radius: 25px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 14px;
+            }
+
+            .login-btn {
+                background: linear-gradient(135deg, #8b0000 0%, #a00000 100%);
+                color: white;
+            }
+
+            .login-btn:hover {
+                background: linear-gradient(135deg, #660000 0%, #800000 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+            }
+
+            .cancel-btn {
+                background: #f0f0f0;
+                color: #666;
+            }
+
+            .cancel-btn:hover {
+                background: #e0e0e0;
+                transform: translateY(-2px);
+            }
+
             /* Responsive Design */
             @media (max-width: 768px) {
                 .header-part1 {
@@ -462,6 +542,10 @@
 
                 .banner img {
                     height: 250px;
+                }
+
+                .login-modal-buttons {
+                    flex-direction: column;
                 }
             }
 
@@ -598,6 +682,18 @@
             </div>
         </div>
 
+        <!-- Login Modal -->
+        <div id="loginModal" class="login-modal">
+            <div class="login-modal-content">
+                <h3>🔐 Yêu cầu đăng nhập</h3>
+                <p>Bạn cần đăng nhập để sử dụng tính năng này. Vui lòng đăng nhập để tiếp tục mua sắm.</p>
+                <div class="login-modal-buttons">
+                    <button class="login-btn" onclick="redirectToLogin()">Đăng nhập ngay</button>
+                    <button class="cancel-btn" onclick="closeLoginModal()">Hủy bỏ</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <div class="footer">
             <div class="footer-content">
@@ -644,39 +740,93 @@
         <script>
             let cart = [];
             let cartCount = 0;
-
-            // Add to cart functionality
-            function addToCart(productName, price) {
-                cart.push({name: productName, price: price});
-                cartCount++;
-                document.getElementById('cartCount').textContent = cartCount;
+            
+            // Check if user is logged in (you can modify this logic based on your session management)
+            function isUserLoggedIn() {
+                // Option 1: Check session attribute from JSP
+                <%
+                    String user = (String) session.getAttribute("user");
+                    String userId = (String) session.getAttribute("userId");
+                %>
+                const user = '<%= user != null ? user : "" %>';
+                const userId = '<%= userId != null ? userId : "" %>';
                 
-                // Simple notification in Vietnamese
-                alert(`${productName} đã được thêm vào giỏ hàng!`);
+                // Return true if user is logged in
+                return user !== "" && userId !== "";
+                
+                // Option 2: Alternative - check localStorage (if you use client-side storage)
+                // return localStorage.getItem('isLoggedIn') === 'true';
+                
+                // Option 3: For testing purposes, you can return false to test the login modal
+                // return false;
             }
 
-            // Toggle cart visibility
-            function toggleCart() {
-                if (cart.length === 0) {
-                    alert('Giỏ hàng của bạn đang trống!');
+            // Show login modal
+            function showLoginModal() {
+                document.getElementById('loginModal').style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+
+            // Close login modal
+            function closeLoginModal() {
+                document.getElementById('loginModal').style.display = 'none';
+                document.body.style.overflow = 'auto'; // Restore scrolling
+            }
+
+            // Redirect to login form
+            function redirectToLogin() {
+                window.location.href = 'Authentication/loginForm.jsp';
+            }
+
+            // Check login before performing actions
+            function checkLoginAndExecute(callback, ...args) {
+                if (!isUserLoggedIn()) {
+                    showLoginModal();
+                    return false;
                 } else {
-                    let cartContent = 'Nội dung giỏ hàng:\n';
-                    let total = 0;
-                    cart.forEach(item => {
-                        cartContent += `- ${item.name}: ${item.price.toLocaleString('vi-VN')} VNĐ\n`;
-                        total += item.price;
-                    });
-                    cartContent += `\nTổng cộng: ${total.toLocaleString('vi-VN')} VNĐ`;
-                    alert(cartContent);
+                    callback(...args);
+                    return true;
                 }
             }
 
-            // Toggle user menu
-            function toggleUser() {
-                alert('Tính năng người dùng sẽ sớm ra mắt!');
+            // Modified add to cart function with login check
+            function addToCart(productName, price) {
+                checkLoginAndExecute(function(productName, price) {
+                    cart.push({name: productName, price: price});
+                    cartCount++;
+                    document.getElementById('cartCount').textContent = cartCount;
+                    
+                    // Simple notification in Vietnamese
+                    alert(`${productName} đã được thêm vào giỏ hàng!`);
+                }, productName, price);
             }
 
-            // Search products
+            // Modified toggle cart with login check
+            function toggleCart() {
+                checkLoginAndExecute(function() {
+                    if (cart.length === 0) {
+                        alert('Giỏ hàng của bạn đang trống!');
+                    } else {
+                        let cartContent = 'Nội dung giỏ hàng:\n';
+                        let total = 0;
+                        cart.forEach(item => {
+                            cartContent += `- ${item.name}: ${item.price.toLocaleString('vi-VN')} VNĐ\n`;
+                            total += item.price;
+                        });
+                        cartContent += `\nTổng cộng: ${total.toLocaleString('vi-VN')} VNĐ`;
+                        alert(cartContent);
+                    }
+                });
+            }
+
+            // Modified toggle user with login check
+            function toggleUser() {
+                checkLoginAndExecute(function() {
+                    alert('Tính năng người dùng sẽ sớm ra mắt!');
+                });
+            }
+
+            // Search products (no login required)
             function searchProducts() {
                 const searchTerm = document.getElementById('searchInput').value.toLowerCase();
                 const products = document.querySelectorAll('.product-item');
@@ -691,7 +841,7 @@
                 });
             }
 
-            // Filter products by category
+            // Filter products by category (no login required)
             function filterProducts(category) {
                 const products = document.querySelectorAll('.product-item');
                 
@@ -741,6 +891,31 @@
                 e.preventDefault();
                 showAllProducts();
                 window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+
+            // Close modal when clicking outside of it
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('loginModal');
+                if (event.target === modal) {
+                    closeLoginModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeLoginModal();
+                }
+            });
+
+            // Initialize page
+            document.addEventListener('DOMContentLoaded', function() {
+                // Check if user is logged in on page load
+                if (isUserLoggedIn()) {
+                    console.log('User is logged in');
+                } else {
+                    console.log('User is not logged in');
+                }
             });
         </script>
     </body>
