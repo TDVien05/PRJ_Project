@@ -1,6 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ * Click nfs://SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nfs://SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package controller;
 
@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import model.UserDAO;
 import model.UserDTO;
+import utils.AuthUtils;
 import utils.DbUtils;
 
 /**
@@ -60,7 +61,6 @@ public class UserController extends HttpServlet {
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -122,7 +122,7 @@ public class UserController extends HttpServlet {
     }
 
     private String handleLogout(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nfs://SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private String handleRegister(HttpServletRequest request, HttpServletResponse response) {
@@ -134,7 +134,24 @@ public class UserController extends HttpServlet {
             String email = request.getParameter("email");
             String address = request.getParameter("address");
 
-            // Kiểm tra dữ liệu đầu vào
+            // Kiểm tra dữ liệu đầu vào với REGEX
+            String validationMessage = AuthUtils.validateCredentials(username, password, email);
+            if (validationMessage != null) {
+                // Xác định lỗi cụ thể
+                if (validationMessage.contains("Username")) {
+                    request.setAttribute("usernameError", validationMessage);
+                } else if (validationMessage.contains("Password")) {
+                    request.setAttribute("passwordError", validationMessage);
+                } else if (validationMessage.contains("Email")) {
+                    request.setAttribute("emailError", validationMessage);
+                }
+                request.setAttribute("username", username);
+                request.setAttribute("email", email);
+                request.setAttribute("address", address);
+                return url;
+            }
+
+            // Kiểm tra dữ liệu đầu vào cơ bản
             if (username == null || username.trim().isEmpty()) {
                 request.setAttribute("usernameError", "Username không được để trống!");
                 return url;
@@ -143,8 +160,8 @@ public class UserController extends HttpServlet {
                 request.setAttribute("passwordError", "Password không được để trống!");
                 return url;
             }
-            if (email == null || email.trim().isEmpty() || !email.contains("@")) {
-                request.setAttribute("emailError", "Email không hợp lệ!");
+            if (email == null || email.trim().isEmpty()) {
+                request.setAttribute("emailError", "Email không được để trống!");
                 return url;
             }
 
@@ -156,42 +173,40 @@ public class UserController extends HttpServlet {
                 request.setAttribute("message", "Đăng ký thành công! Vui lòng đăng nhập.");
                 url = LOGIN;
             } else {
-                if (username != null && !username.trim().isEmpty()) {
-                    request.setAttribute("message", "Đăng ký thất bại! Vui lòng kiểm tra lại.");
-                    // Kiểm tra lỗi cụ thể
-                    Connection conn = null;
-                    PreparedStatement pstmt = null;
-                    ResultSet rs = null;
-                    try {
-                        conn = DbUtils.getConnection();
-                        String checkSql = "SELECT COUNT(*) FROM users WHERE username = ?";
-                        pstmt = conn.prepareStatement(checkSql);
-                        pstmt.setString(1, username);
-                        rs = pstmt.executeQuery();
-                        if (rs.next() && rs.getInt(1) > 0) {
-                            request.setAttribute("usernameError", "Username đã tồn tại!");
-                        }
-                        pstmt.close();
+                request.setAttribute("message", "Đăng ký thất bại! Vui lòng kiểm tra lại.");
+                // Kiểm tra lỗi trùng lặp
+                Connection conn = null;
+                PreparedStatement pstmt = null;
+                ResultSet rs = null;
+                try {
+                    conn = DbUtils.getConnection();
+                    String checkSql = "SELECT COUNT(*) FROM users WHERE username = ?";
+                    pstmt = conn.prepareStatement(checkSql);
+                    pstmt.setString(1, username);
+                    rs = pstmt.executeQuery();
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        request.setAttribute("usernameError", "Username đã tồn tại!");
+                    }
+                    pstmt.close();
 
-                        checkSql = "SELECT COUNT(*) FROM users WHERE email = ?";
-                        pstmt = conn.prepareStatement(checkSql);
-                        pstmt.setString(1, email);
-                        rs = pstmt.executeQuery();
-                        if (rs.next() && rs.getInt(1) > 0) {
-                            request.setAttribute("emailError", "Email đã tồn tại!");
-                        }
-                    } catch (Exception e) {
-                        
-                    } finally {
-                        if (rs != null) {
-                            rs.close();
-                        }
-                        if (pstmt != null) {
-                            pstmt.close();
-                        }
-                        if (conn != null) {
-                            conn.close();
-                        }
+                    checkSql = "SELECT COUNT(*) FROM users WHERE email = ?";
+                    pstmt = conn.prepareStatement(checkSql);
+                    pstmt.setString(1, email);
+                    rs = pstmt.executeQuery();
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        request.setAttribute("emailError", "Email đã tồn tại!");
+                    }
+                } catch (Exception e) {
+                    request.setAttribute("message", "Lỗi hệ thống: " + e.getMessage());
+                } finally {
+                    if (rs != null) {
+                        rs.close();
+                    }
+                    if (pstmt != null) {
+                        pstmt.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
                     }
                 }
             }
@@ -200,5 +215,4 @@ public class UserController extends HttpServlet {
         }
         return url;
     }
-
 }

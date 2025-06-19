@@ -526,8 +526,8 @@
             </div>
 
             <div class="contact-info">
-                <span class="phone">📞 0705.777.760</span>
-                <span class="email">✉️ bama.bags@gmail.com</span>
+                <span class="phone">📞 0705.777.700</span>
+                <span class="email">✉️ bepbui.bags@gmail.com</span>
             </div>
 
             <div class="search-cart-user">
@@ -591,7 +591,7 @@
                 <div class="product-item" data-category="wallet">
                     <img src="images/products/0.avif" alt="Ví C" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                     <div class="image-placeholder" style="display:none; height:200px;">Hình ảnh Ví</div>
-                    <div class="product-title">Ví Da Sang Trọng C</div>
+                    <div class="product-title">Ví Sang Trọng C</div>
                     <div class="product-price">500.000 VNĐ</div>
                     <button class="add-to-cart" onclick="addToCart('Ví C', 500000)">Thêm vào giỏ hàng</button>
                 </div>
@@ -603,7 +603,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>GIỚI THIỆU VỀ CHÚNG TÔI</h3>
-                    <p>Bepbui là điểm đến cho các sản phẩm túi xách chất lượng cao. Chúng tôi cung cấp bộ sưu tập độc đáo gồm balo, túi tote và ví da.</p>
+                    <p>Bepbui là điểm đến cho các sản phẩm túi xách chất lượng cao. Chúng tôi cung cấp bộ sưu tập độc đáo gồm balo, túi tote và ví.</p>
                 </div>
                 <div class="footer-section">
                     <h3>CHÍNH SÁCH & HỖ TRỢ</h3>
@@ -617,9 +617,9 @@
                 <div class="footer-section">
                     <h3>THÔNG TIN LIÊN HỆ</h3>
                     <ul>
-                        <li>📞 Điện thoại: 0705.777.760</li>
-                        <li>📠 Fax: 0705.777.760</li>
-                        <li>✉️ Email: bama.bags@gmail.com</li>
+                        <li>📞 Điện thoại: 0705.777.700</li>
+                        <li>📠 Fax: 0705.777.700</li>
+                        <li>✉️ Email: bepbui.bags@gmail.com</li>
                         <li>📍 Địa chỉ: Thành phố Hồ Chí Minh</li>
                     </ul>
                 </div>
@@ -634,7 +634,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                Bản quyền © 2025 BAMA. Tất cả quyền được bảo lưu.
+                Bản quyền © 2025 Bepbui. Tất cả quyền được bảo lưu.
             </div>
         </div>
 
