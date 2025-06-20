@@ -88,7 +88,7 @@
 <body>
     <div class="login-container">
         <h1>Login</h1>
-        <form action="user-controller" method="post">
+        <form action="${pageContext.request.contextPath}/user-controller" method="post">
             <input type="hidden" name="action" value="login" />
             <div class="form-group">
                 <label for="strUsername">Username:</label>
@@ -103,7 +103,7 @@
             </div>
             <div class="error-message"><%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %></div>
             <div class="register-link">
-                Don't have an account yet? <a style="color: #EA483A" href="Authentication/registerForm.jsp" target="target">Register now</a>
+                Don't have an account yet? <a style="color: #EA483A" href="${pageContext.request.contextPath}/Authentication/registerForm.jsp" target="target">Register now</a>
             </div>
         </form>
     </div>
