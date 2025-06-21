@@ -107,22 +107,42 @@ public class UserController extends HttpServlet {
         HttpSession session = request.getSession();
         String strUsername = request.getParameter("strUsername");
         String strPassword = request.getParameter("strPassword");
+        
+        // Debug log
+        System.out.println("Login attempt - Username: " + strUsername);
+        
         UserDAO userDAO = new UserDAO();
         if (userDAO.login(strUsername, strPassword)) {
             UserDTO user = userDAO.getUserByUsername(strUsername);
-            // di den trang welcome.jsp
-            url = WELCOME;
-            session.setAttribute("user", user);
+            if (user != null) {
+                // Set both user object and userId in session
+                session.setAttribute("user", user);
+                session.setAttribute("userId", user.getId());
+                session.setAttribute("username", user.getUsername());
+                
+                System.out.println("Login successful for user: " + user.getUsername());
+                url = WELCOME;
+            } else {
+                System.out.println("User object is null");
+                request.setAttribute("message", "Login failed - user data not found!");
+                url = LOGIN;
+            }
         } else {
-            // di den trang loginForm.jsp
-            url = LOGIN;
+            System.out.println("Login failed for username: " + strUsername);
             request.setAttribute("message", "Username or Password incorrect!");
+            url = LOGIN;
         }
+        
+        System.out.println("Redirecting to: " + url);
         return url;
     }
 
     private String handleLogout(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return LOGIN;
     }
 
     private String handleRegister(HttpServletRequest request, HttpServletResponse response) {
@@ -181,24 +201,22 @@ public class UserController extends HttpServlet {
                             request.setAttribute("emailError", "Email đã tồn tại!");
                         }
                     } catch (Exception e) {
-                        
+                        e.printStackTrace();
                     } finally {
-                        if (rs != null) {
-                            rs.close();
-                        }
-                        if (pstmt != null) {
-                            pstmt.close();
-                        }
-                        if (conn != null) {
-                            conn.close();
+                        try {
+                            if (rs != null) rs.close();
+                            if (pstmt != null) pstmt.close();
+                            if (conn != null) conn.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             request.setAttribute("message", "Lỗi không xác định: " + e.getMessage());
         }
         return url;
     }
-
 }
