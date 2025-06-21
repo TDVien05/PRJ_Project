@@ -741,24 +741,22 @@
             let cart = [];
             let cartCount = 0;
             
-            // Check if user is logged in (you can modify this logic based on your session management)
+            // Check if user is logged in 
             function isUserLoggedIn() {
-                // Option 1: Check session attribute from JSP
+                // Check session attribute from JSP
                 <%
-                    String user = (String) session.getAttribute("user");
-                    String userId = (String) session.getAttribute("userId");
+                    // Get user object from session
+                    model.UserDTO userSession = (model.UserDTO) session.getAttribute("user");
+                    String userIdSession = (String) session.getAttribute("userId");
+                    String usernameSession = (String) session.getAttribute("username");
                 %>
-                const user = '<%= user != null ? user : "" %>';
-                const userId = '<%= userId != null ? userId : "" %>';
                 
-                // Return true if user is logged in
-                return user !== "" && userId !== "";
-                
-                // Option 2: Alternative - check localStorage (if you use client-side storage)
-                // return localStorage.getItem('isLoggedIn') === 'true';
-                
-                // Option 3: For testing purposes, you can return false to test the login modal
-                // return false;
+                // Check if user object exists in session
+                <% if (userSession != null) { %>
+                    return true;
+                <% } else { %>
+                    return false;
+                <% } %>
             }
 
             // Show login modal
@@ -775,7 +773,7 @@
 
             // Redirect to login form
             function redirectToLogin() {
-                window.location.href = 'Authentication/loginForm.jsp';
+                window.location.href = '${pageContext.request.contextPath}/Authentication/loginForm.jsp';
             }
 
             // Check login before performing actions
@@ -822,7 +820,20 @@
             // Modified toggle user with login check
             function toggleUser() {
                 checkLoginAndExecute(function() {
-                    alert('Tính năng người dùng sẽ sớm ra mắt!');
+                    // Show user info if logged in
+                    <% if (userSession != null) { %>
+                        let userInfo = 'Thông tin người dùng:\n';
+                        userInfo += 'Tên đăng nhập: <%= userSession.getUsername() %>\n';
+                        userInfo += 'Email: <%= userSession.getEmail() %>\n';
+                        userInfo += 'Địa chỉ: <%= userSession.getAddress() != null ? userSession.getAddress() : "Chưa cập nhật" %>\n';
+                        userInfo += 'Vai trò: <%= "AD".equals(userSession.getRoleID()) ? "Quản trị viên" : "Khách hàng" %>';
+                        
+                        if (confirm(userInfo + '\n\nBạn có muốn đăng xuất không?')) {
+                            window.location.href = '${pageContext.request.contextPath}/user-controller?action=logout';
+                        }
+                    <% } else { %>
+                        alert('Tính năng người dùng sẽ sớm ra mắt!');
+                    <% } %>
                 });
             }
 
@@ -913,6 +924,9 @@
                 // Check if user is logged in on page load
                 if (isUserLoggedIn()) {
                     console.log('User is logged in');
+                    <% if (userSession != null) { %>
+                        console.log('Welcome <%= userSession.getUsername() %>!');
+                    <% } %>
                 } else {
                     console.log('User is not logged in');
                 }

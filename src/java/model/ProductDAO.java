@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.sql.Connection;
@@ -21,9 +17,10 @@ public class ProductDAO {
     private static final String GET_ALL_PRODUCTS = "SELECT * FROM products";
     private static final String GET_PRODUCT_BY_ID = "SELECT * FROM products WHERE id = ?";
     private static final String GET_PRODUCT_BY_NAME = "SELECT * FROM products WHERE name = ?";
-    private static final String CREATE_PRODUCT = "INSERT INTO products (id, name, price, description, price, size, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_PRODUCT = "UPDATE products SET name = ?, image = ?, description = ?, price = ?, size = ?, status = ? WHERE id = ?";
+    private static final String CREATE_PRODUCT = "INSERT INTO products (id, name, price, description, image_url, category_id, stock_quantity, status, brand_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_PRODUCT = "UPDATE products SET name = ?, price = ?, description = ?, image_url = ?, category = ?, stock_quantity = ?, status = ? WHERE id = ?";
     private static final String DELETE_PRODUCT = "DELETE FROM products WHERE id = ?";
+    private static final String GET_ACTIVE_PRODUCTS_BY_NAME = "SELECT * FROM products WHERE name LIKE ? AND status = 1";
 
     public ProductDAO() {
     }
@@ -45,14 +42,15 @@ public class ProductDAO {
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getDouble("price"));
                 product.setDescription(rs.getString("description"));
-                product.setImage(rs.getString("image_url"));
-                product.setCategory(rs.getString("category"));
+                product.setImageUrl(rs.getString("image_url"));
+                product.setCategoryId(rs.getString("category_id"));
                 product.setStockQuantity(rs.getInt("stock_quantity"));
                 product.setStatus(rs.getBoolean("status"));
-
+                product.setBrandId(rs.getInt("brand_id"));
                 products.add(product);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             closeResources(conn, ps, rs);
         }
@@ -73,18 +71,20 @@ public class ProductDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                product = new ProductDTO();
+                product = new ProductDTO(); // Initialize the product object here!
                 product.setId(rs.getString("id"));
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getDouble("price"));
                 product.setDescription(rs.getString("description"));
-                product.setImage(rs.getString("image_url"));
-                product.setCategory(rs.getString("category"));
+                product.setImageUrl(rs.getString("image_url"));
+                product.setCategoryId(rs.getString("category_id"));
                 product.setStockQuantity(rs.getInt("stock_quantity"));
                 product.setStatus(rs.getBoolean("status"));
+                product.setBrandId(rs.getInt("brand_id"));
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             closeResources(conn, ps, rs);
         }
@@ -105,31 +105,30 @@ public class ProductDAO {
             ps.setString(2, product.getName());
             ps.setDouble(3, product.getPrice());
             ps.setString(4, product.getDescription());
-            ps.setString(5, product.getImage());
-            ps.setString(6, product.getCategory());
+            ps.setString(5, product.getImageUrl());
+            ps.setString(6, product.getCategoryId());
             ps.setInt(7, product.getStockQuantity());
             ps.setBoolean(8, product.isStatus());
-            
+            ps.setInt(9, product.getBrandId());
+
             int rowAffected = ps.executeUpdate();
-            if(rowAffected > 0) {
+            if (rowAffected > 0) {
                 success = true;
             }
-            
+
         } catch (Exception e) {
-            
+            e.printStackTrace();
         } finally {
             closeResources(conn, ps, null);
         }
         return success;
-        
     }
-    
-    
-    public boolean update (ProductDTO product) {
+
+    public boolean update(ProductDTO product) {
         boolean success = false;
         Connection conn = null;
         PreparedStatement ps = null;
-        
+
         try {
             conn = DbUtils.getConnection();
             ps = conn.prepareStatement(UPDATE_PRODUCT);
@@ -137,149 +136,181 @@ public class ProductDAO {
             ps.setString(1, product.getName());
             ps.setDouble(2, product.getPrice());
             ps.setString(3, product.getDescription());
-            ps.setString(4, product.getImage());
-            ps.setString(5, product.getCategory());
+            ps.setString(4, product.getImageUrl());
+            ps.setString(5, product.getCategoryId());
             ps.setInt(6, product.getStockQuantity());
             ps.setBoolean(7, product.isStatus());
-            ps.setString(8, product.getId()); //Vì UPDATE_PRODUCT có "id = ?" at the end of the query
-            
-            
+            ps.setInt(8, product.getBrandId());
+            ps.setString(9, product.getId()); // ID goes last for WHERE clause
+
             int rowAffected = ps.executeUpdate();
-            if(rowAffected > 0) {
+            if (rowAffected > 0) {
                 success = true;
             }
-            
+
         } catch (Exception e) {
-            
+            e.printStackTrace();
         } finally {
             closeResources(conn, ps, null);
         }
         return success;
     }
 
-    
-    public boolean delete (String id) {
+    public boolean delete(String id) {
         boolean success = false;
         Connection conn = null;
         PreparedStatement ps = null;
-        
+
         try {
             conn = DbUtils.getConnection();
             ps = conn.prepareStatement(DELETE_PRODUCT);
-            ps.setString(1, id); //Vì DELETE_PRODUCT = "DELETE FROM tblProducts WHERE id = ?"
+            ps.setString(1, id);
 
             int rowAffected = ps.executeUpdate();
-            if(rowAffected > 0) {
+            if (rowAffected > 0) {
                 success = true;
             }
-            
+
         } catch (Exception e) {
-            
+            e.printStackTrace();
         } finally {
             closeResources(conn, ps, null);
         }
         return success;
     }
-    
-    
-    public List<ProductDTO> getProductByName (String name){
-        //need a list to add products have the same name
+
+    public List<ProductDTO> getProductByName(String name) {
         List<ProductDTO> products = new ArrayList<>();
-        
-        
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        
-        String query = GET_ALL_PRODUCTS + "where name like ?";
+
+        String query = GET_ALL_PRODUCTS + " WHERE name LIKE ?";
         try {
             conn = DbUtils.getConnection();
             ps = conn.prepareStatement(query);
+            ps.setString(1, "%" + name + "%");
             rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 ProductDTO product = new ProductDTO();
                 product.setId(rs.getString("id"));
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getDouble("price"));
                 product.setDescription(rs.getString("description"));
-                product.setImage(rs.getString("image_url"));
-                product.setCategory(rs.getString("category"));
+                product.setImageUrl(rs.getString("image_url"));
+                product.setCategoryId(rs.getString("category_id"));
                 product.setStockQuantity(rs.getInt("stock_quantity"));
                 product.setStatus(rs.getBoolean("status"));
-                
+                product.setBrandId(rs.getInt("brand_id"));
+
                 products.add(product);
             }
-            
-            
-            
+
         } catch (Exception e) {
-            
+            e.printStackTrace();
         } finally {
             closeResources(conn, ps, rs);
         }
         return products;
     }
-    
-    
-    
-    public boolean isProductExists(String id) {
-        return getProductById(id) != null;
-    }
 
-    
-    
-    public List<ProductDTO> getProductsByStatus (boolean status){
+    /**
+     * Get active products by name (status = 1)
+     *
+     * @param name Product name to search
+     * @return List of active products matching the name
+     */
+    public List<ProductDTO> getActiveProductByName(String name) {
         List<ProductDTO> products = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        
-        String query = GET_ALL_PRODUCTS + "where status = ?";
-        
+
+        try {
+            conn = DbUtils.getConnection();
+            ps = conn.prepareStatement(GET_ACTIVE_PRODUCTS_BY_NAME);
+            ps.setString(1, "%" + name + "%");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProductDTO product = new ProductDTO();
+                product.setId(rs.getString("id"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getDouble("price"));
+                product.setDescription(rs.getString("description"));
+                product.setImageUrl(rs.getString("image_url"));
+                product.setCategoryId(rs.getString("category_id"));
+                product.setStockQuantity(rs.getInt("stock_quantity"));
+                product.setStatus(rs.getBoolean("status"));
+                product.setBrandId(rs.getInt("brand_id"));
+
+                products.add(product);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, ps, rs);
+        }
+        return products;
+    }
+
+    public boolean isProductExists(String id) {
+        return getProductById(id) != null;
+    }
+
+    public List<ProductDTO> getProductsByStatus(boolean status) {
+        List<ProductDTO> products = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = GET_ALL_PRODUCTS + " WHERE status = ?";
+
         try {
             conn = DbUtils.getConnection();
             ps = conn.prepareStatement(query);
             ps.setBoolean(1, status);
             rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 ProductDTO product = new ProductDTO();
                 product.setId(rs.getString("id"));
                 product.setName(rs.getString("name"));
                 product.setPrice(rs.getDouble("price"));
                 product.setDescription(rs.getString("description"));
-                product.setImage(rs.getString("image_url"));
-                product.setCategory(rs.getString("category"));
+                product.setImageUrl(rs.getString("image_url"));
+                product.setCategoryId(rs.getString("category_id"));
                 product.setStockQuantity(rs.getInt("stock_quantity"));
                 product.setStatus(rs.getBoolean("status"));
-                
+                product.setBrandId(rs.getInt("brand_id"));
+
                 products.add(product);
-                
+
             }
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             closeResources(conn, ps, rs);
         }
-        
+
         return products;
     }
-    
-    
+
     private void closeResources(Connection conn, PreparedStatement ps, ResultSet rs) {
         try {
-            if (conn != null) {
-                conn.close();
-            }
-
-            if (ps != null) {
-                ps.close();
-            }
-
             if (rs != null) {
                 rs.close();
             }
+            if (ps != null) {
+                ps.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -13,23 +13,25 @@ public class ProductDTO {
     private String name;
     private double price;
     private String description;
-    private String image;
-    private String category;
+    private String imageUrl;
+    private String categoryId;
     private int stockQuantity;
     private boolean status;
+    private int brandId;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String id, String name, double price, String description, String image, String category, int stockQuantity, boolean status) {
+    public ProductDTO(String id, String name, double price, String description, String imageUrl, String categoryId, int stockQuantity, boolean status, int brandId) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
-        this.image = image;
-        this.category = category;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
         this.stockQuantity = stockQuantity;
         this.status = status;
+        this.brandId = brandId;
     }
 
     public String getId() {
@@ -64,20 +66,20 @@ public class ProductDTO {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public String getCategory() {
-        return category;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public int getStockQuantity() {
@@ -96,10 +98,19 @@ public class ProductDTO {
         this.status = status;
     }
 
+    public int getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
+    }
+
     @Override
     public String toString() {
-        return "ProductDTO{" + "id=" + id + ", name=" + name + ", price=" + price + ", description=" + description + ", image=" + image + ", category=" + category + ", stockQuantity=" + stockQuantity + ", status=" + status + '}';
+        return "ProductDTO{" + "id=" + id + ", name=" + name + ", price=" + price + ", description=" + description + ", imageUrl=" + imageUrl + ", categoryId=" + categoryId + ", stockQuantity=" + stockQuantity + ", status=" + status + ", brandId=" + brandId + '}';
     }
+
     
-    
+
 }
